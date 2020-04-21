@@ -2,16 +2,16 @@ import numpy as np
 
 def tobinary(i, n):
    
-    #convertir un int en une liste de 0 et de 1 de longueur n
+    #convertir un int en une liste de 0 et de 1 de longueur au moins n
     #i= a1*2**0+...+an*2**(n-1) s'écrit [a1,...,an] 
     
     binarystr = bin(i) 
     binarylist = []
    
-    for j in range(len(binarystr)-1, 1, -1):
+    for j in range(len(binarystr)-1, 1, -1): #
         binarylist.append(int(binarystr[j]))
     
-    while len(binarylist)!=n :
+    while len(binarylist) < n :
         binarylist.append(0)
     
     return np.array(binarylist)
