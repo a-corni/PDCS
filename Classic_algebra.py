@@ -1,6 +1,7 @@
 import numpy as np
 from math import log
 import sys
+from itertools import permutations
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -116,3 +117,22 @@ def translation_operator(M, i):
 def remove_array_from_list_array(list, test_array):
     
     return [ M for M in list if not (M==test_array).all()]
+
+def permutation(M):
+    
+   N = np.transpose(M)
+   all_permutation = []
+   permute_columns = permutations(N)
+   
+   for tuple in permute_columns :
+       
+        matrix = []
+       
+        for column in tuple :
+
+            matrix.append(column)
+        
+        final_matrix_transposed = np.array(matrix)
+        all_permutation.append(np.transpose(final_matrix_transposed))
+        
+   return all_permutation

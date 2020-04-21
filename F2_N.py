@@ -51,6 +51,50 @@ def linear_subspace(n):
     
     return linearsubspace
    
+def linear_subset_new_condition(N):
+    
+    #liste des matrices commutatives
+    linear_subsets = []
+    
+    MnF2 = Mn_F2(n) #O(N**2*2**(N**2))
+    
+    I = np.eye(N,dtype=int)
+    zero = np.zeros((N,N),dtype=int)
+    
+    for A in MnF2 : 
+    
+        M = np.concatenate((I,A), axis = 1)
+        generated_subsets = permutation(M)
+            
+        for generated_subset in generated_subsets :
+            
+            # on regarde si M ne génère pas le même ensemble qu'un générateur déjà observé
+            hasappeared = False
+            m = len(linear_subsets)
+            
+            # on parcourt la liste des ensembles déjà générés
+            for indexsubset in range(m): # unknown but maximal C(2n,n)*2**n
+                
+                subset = linearsubset[indexsubset]
+                representant = subset[0] 
+                
+                # on compare notre générateur à un générateur déjà trouvé
+                if are_equivalent(generated_subset, representant): #O(N*2**N)
+                
+                    # s'ils génèrent le même groupe
+                    # on stocke la matrice M au format (A,B) dans la même liste que le générateur comparé 
+                    linearsubspace[indexsubset].append(generated_subset)
+                    hasappeared = True
+            
+            if not hasappeared :
+                
+                # sinon
+                # on crée un nouveau groupe de matrices équivalentes. 
+                linearsubspace.append([M])
+             
+    
+    return linear_subsets
+    
 def linear_subspace_toprint(n):
 
     fichier = open("linear_subspace.txt", "w")
