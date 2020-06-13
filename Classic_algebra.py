@@ -2,6 +2,7 @@ import numpy as np
 from math import log
 import sys
 from itertools import permutations
+from cmath import *
 np.set_printoptions(threshold=sys.maxsize)
 
 
@@ -136,3 +137,192 @@ def permutation(M):
         all_permutation.append(np.transpose(final_matrix_transposed))
         
    return all_permutation
+   
+def tensorprod(matrices):
+    
+    finalmatrix = matrices.pop(0)
+    
+    for matrix in matrices :
+        
+        finalmatrix = np.kron(finalmatrix, matrix)
+    
+    return finalmatrix
+    
+def generatematrix(eigenvalues, eigenvectors):
+    
+    P = np.array(eigenvectors)
+    D = np.diag(eigenvalues)
+    invP = np.linalg.inv(P)
+    
+    left = np.matmul(P,D)
+    
+    return np.matmul(left, invP)
+    
+def generategate(eigenvaluesH, eigenvectors):
+    
+    #mwesh ca marche pas bien
+    
+    P = np.array(eigenvectors)
+    eigenvaluesU = [exp(x*1j) for x in eigenvaluesH]
+    D = np.diag(eigenvaluesU)
+    invP = np.linalg.inv(P)
+    
+    left = np.matmul(P,D)
+    
+    return np.matmul(left, invP)
+    
+def extract_hermitian_from_gate(U):
+    
+    (eigenvaluesU, P) = np.linalg.eig(U)
+    eigenvaluesH = [phase(x) for x in eigenvaluesU]
+    
+    return generatematrix(eigenvaluesH,P)
+
+def HS(a,b,N):
+    
+    return np.trace(np.matmul(a,np.conj(b).T))/2**N
+
+def SU_2():
+    return (['I','X','Y','Z'], [np.array([[1,0],[0,1]]), np.array([[0, 1],[1, 0]]), np.array([[0, -1*1j],[1j, 0]]), np.array([[1,0],[0,-1]])])
+
+def SU_2_N(N):
+    
+    (SU_2_names,SU_2_matrices) = SU_2()
+    Paulimatrices = list(SU_2_matrices)
+    Paulinames = list(SU_2_names)
+    
+    for i in range(N-1):
+        
+        m = len(Paulimatrices)
+        
+        for j in range(m):
+            
+            Paulimatrix = Paulimatrices.pop(0)
+            Pauliname = Paulinames.pop(0)
+            
+            for k in range(4):
+            
+                Paulimatrices.append(tensorprod([Paulimatrix, SU_2_matrices[k]]))
+                Paulinames.append(Pauliname+SU_2_names[k])
+    
+    return (Paulinames, Paulimatrices)
+    
+
+def fusion_list(L1, L2):
+    
+    M = []
+    n = len(L1)
+    
+    for i in range(n):
+        
+        M.append([L1[i],L2[i]])
+        
+    return M
+    
+def order(list):
+    
+    ordered_list = [list[0]]
+    n = len(list)
+    
+    for i in range(1,n):
+        
+        j = 0
+        m = len(ordered_list)
+        x = abs(list[i][1])
+        
+        while j<m and x > abs(ordered_list[j][1]):
+                
+            j+=1    
+            
+        ordered_list.insert(j,list[i])
+   
+    return ordered_list
+
+def eig_projectors(H,N):
+    
+    (eigenvaluesH, psi) = np.linalg.eig(H)
+    
+    E = []
+    
+    for i in range(2**N):
+        
+        E_i = np.zeros((2**N,2**N))
+        psi_i = psi[i]
+        
+        for j in range(2**N):
+            
+            E_i[:,j] = psi_i[j]*psi_i
+        
+        E.append(E_i)
+    
+    return (eigenvaluesH, E)
+
+def epsilon(N):
+    
+    eps = np.zeros((N,2**N),int)
+    for k in range (1,N+1):
+        for i in range(2**N):
+            if (i)%(2**(N-k+1))<2**(N-k):
+                eps[k-1,i] = 1
+            else :
+                eps[k-1,i] = -1
+    return eps
+
+def alpha(N):
+    
+    alpha = np.zeros((2**N,2**N),int)
+    eps = epsilon(N)
+    F2 = F2_n(N)
+    
+    for k in range(2**N):
+        for i in range(2**N):
+            aki = 1
+            for j in range(N):
+                aki*=eps[j,i]**(int(F2[k][j]))
+            alpha[k,i] = aki
+   
+    return alpha
+    
+def prod_unit(A, B):
+    
+    if A == 'I':
+        return B
+    elif B =='I' :
+        return A
+    elif A == B:
+        return 'I'
+    elif ((A in ['X','Y']) and (B in ['X','Y'])):
+        return 'Z'
+    elif ((A in ['X','Z']) and (B in ['X','Z'])):
+        return 'Y'
+    elif ((A in ['Y','Z']) and (B in ['Y','Z'])):
+        return 'X'
+
+def prod(A,B,N):
+    
+    product = ''
+    for i in range(n):
+        product+=prod_unit(A[i],B[i])
+    return product
+        
+def commute(A1, A2, n):
+    
+    flip = 0
+    for i in range(n):
+        A = A1[i]
+        B = A2[i]
+        if not (A == B or A == 'I' or B =='I'):
+            flip +=1
+    if flip%2==0:
+        return True
+    return False
+    
+def norm(subset):
+    
+    S = 0
+    
+    for x in subset :
+        
+        S += x[1]**2
+    
+    return S

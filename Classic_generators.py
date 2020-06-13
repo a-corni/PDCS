@@ -1,14 +1,9 @@
-import Classic_algebra
+from Classic_algebra import *
 import numpy as np
 import sys
 np.set_printoptions(threshold=sys.maxsize)
-
-def sev(A,B):
     
-    #sous espace vectoriel engendré par les lignes de la matrice C=(A,B)
-    #S = sum[1<=i<=n](ei*ci) où ci est la i-ème ligne de C et (ei) est dans {0,1}^n 
-    #on a un ensemble de lignes en sortie
-    #O(n*2**n) complexity
+def sev(A,B):
     
     set = []
     taille = np.shape(A)

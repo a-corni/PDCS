@@ -1,8 +1,10 @@
 import numpy as np
 import sys
-import Classic_algebra
-import Classic_generators
+from Classic_algebra import *
+from Classic_generators import *
 np.set_printoptions(threshold=sys.maxsize)
+import csv
+
 
 def linear_subspace(n):
     
@@ -56,7 +58,7 @@ def linear_subset_new_condition(N):
     #liste des matrices commutatives
     linear_subsets = []
     
-    MnF2 = Mn_F2(n) #O(N**2*2**(N**2))
+    MnF2 = Mn_F2(N) #O(N**2*2**(N**2))
     
     I = np.eye(N,dtype=int)
     zero = np.zeros((N,N),dtype=int)
@@ -75,7 +77,7 @@ def linear_subset_new_condition(N):
             # on parcourt la liste des ensembles déjà générés
             for indexsubset in range(m): # unknown but maximal C(2n,n)*2**n
                 
-                subset = linearsubset[indexsubset]
+                subset = linear_subsets[indexsubset]
                 representant = subset[0] 
                 
                 # on compare notre générateur à un générateur déjà trouvé
@@ -83,21 +85,21 @@ def linear_subset_new_condition(N):
                 
                     # s'ils génèrent le même groupe
                     # on stocke la matrice M au format (A,B) dans la même liste que le générateur comparé 
-                    linearsubspace[indexsubset].append(generated_subset)
+                    linear_subsets[indexsubset].append(generated_subset)
                     hasappeared = True
             
             if not hasappeared :
                 
                 # sinon
                 # on crée un nouveau groupe de matrices équivalentes. 
-                linearsubspace.append([M])
+                linear_subsets.append([M])
              
     
     return linear_subsets
     
-def linear_subspace_toprint(n):
+def linear_subspace_toprint_txt(n):
 
-    fichier = open("linear_subspace.txt", "w")
+    fichier = open("linear_subspace_"+str(n)+".txt", "w")
     linearsubspace = linear_subspace(n)
     understoodable = []
     
@@ -107,7 +109,7 @@ def linear_subspace_toprint(n):
         (A,B) = subspace[1]
         subspacename = sub_pauli(A,B)
         understoodable.append(subspacename)
-        fichier.write(str(subspacename) + "Il y a " + str(n-1)+ " matrices équivalentes :" +"\n")
+        fichier.write(str(subspacename) + " Il y a " + str(n-1)+ " matrices équivalentes :" +"\n")
         
         for i in range(1,n):
             
@@ -120,3 +122,31 @@ def linear_subspace_toprint(n):
     fichier.close()
     
     return understoodable
+
+def linear_subspace_toprint_csv(n):
+    
+
+    fichier = open("linear_subspace_"+str(n)+".csv", "wt")
+    linearsubspaceCSV = csv.writer(fichier,delimiter=";")
+
+    linearsubspace = linear_subspace(n)
+    
+    for subspace in linearsubspace:
+        
+        (A,B) = subspace[1]
+        subspacename = sub_pauli(A,B)
+        commutative_subset = [subspacename[0], subspacename[1]]
+        for i in range(2, 2**n) :
+            new_pauli_operator = subspacename[i]
+            commute_with_all = True
+            for  pauli_operator in commutative_subset :
+                if not commute(new_pauli_operator, pauli_operator,n):
+                    commute_with_all = False
+                    break
+            if commute_with_all :
+                commutative_subset.append(new_pauli_operator)
+        if len(commutative_subset)==len(subspacename):
+            linearsubspaceCSV.writerow(subspacename)
+    
+    fichier.close()
+    

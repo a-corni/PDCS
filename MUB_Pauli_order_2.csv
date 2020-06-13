@@ -1,0 +1,11 @@
+index 1;index 2;index 3;index 4;index 5
+['II', 'IZ', 'ZI', 'ZZ'];['II', 'IX', 'XI', 'XX'];['II', 'ZY', 'XZ', 'YX'];['II', 'IY', 'YI', 'YY'];['II', 'ZX', 'YZ', 'XY']
+['II', 'XI', 'IZ', 'XZ'];['II', 'ZI', 'IX', 'ZX'];['II', 'YZ', 'XX', 'ZY'];['II', 'YI', 'IY', 'YY'];['II', 'ZZ', 'XY', 'YX']
+['II', 'IZ', 'ZI', 'ZZ'];['II', 'IY', 'XI', 'XY'];['II', 'ZX', 'XZ', 'YY'];['II', 'IX', 'YI', 'YX'];['II', 'ZY', 'YZ', 'XX']
+['II', 'XI', 'IZ', 'XZ'];['II', 'YI', 'IX', 'YX'];['II', 'ZZ', 'XX', 'YY'];['II', 'ZI', 'IY', 'ZY'];['II', 'YZ', 'XY', 'ZX']
+['II', 'IX', 'XI', 'XX'];['II', 'IY', 'ZI', 'ZY'];['II', 'XZ', 'ZX', 'YY'];['II', 'IZ', 'YI', 'YZ'];['II', 'XY', 'YX', 'ZZ']
+['II', 'ZI', 'IX', 'ZX'];['II', 'YI', 'IZ', 'YZ'];['II', 'XX', 'ZZ', 'YY'];['II', 'XI', 'IY', 'XY'];['II', 'YX', 'ZY', 'XZ']
+['II', 'IZ', 'ZI', 'ZZ'];['II', 'IY', 'XI', 'XY'];['II', 'ZY', 'XZ', 'YX'];['II', 'IX', 'YI', 'YX'];['II', 'ZX', 'YZ', 'XY']
+['II', 'XI', 'IZ', 'XZ'];['II', 'YI', 'IX', 'YX'];['II', 'YZ', 'XX', 'ZY'];['II', 'ZI', 'IY', 'ZY'];['II', 'ZZ', 'XY', 'YX']
+['II', 'IX', 'XI', 'XX'];['II', 'IY', 'ZI', 'ZY'];['II', 'XY', 'ZX', 'YZ'];['II', 'IZ', 'YI', 'YZ'];['II', 'XZ', 'YX', 'ZY']
+['II', 'ZI', 'IX', 'ZX'];['II', 'YI', 'IZ', 'YZ'];['II', 'YX', 'ZZ', 'XY'];['II', 'XI', 'IY', 'XY'];['II', 'XX', 'ZY', 'YZ']
